@@ -4,6 +4,7 @@
 .easy-accordion dt,.easy-accordion dd{margin:0;padding:0}
 .easy-accordion dt,.easy-accordion dd{position:absolute}
 .easy-accordion dt{margin-bottom:0;margin-left:0;z-index:5;cursor:pointer;
+/* fix chrome bug */-webkit-backface-visibility: hidden;
 /* CSS3 */ transform: rotate(-90deg); 
 /* Opera */ -o-transform: rotate(-90deg); 
 /* Webkit */ -webkit-transform: rotate(-90deg); 
@@ -18,6 +19,7 @@
 .easy-accordion dd.active{z-index:3}
 .easy-accordion dd.plus{z-index:4}
 .easy-accordion .slide-number{position:absolute;bottom:0;font-weight:normal;font-size:1.1em;
+/* fix chrome bug */-webkit-backface-visibility: hidden;
 /* CSS3 */ transform: rotate(90deg);
 /* Opera */ -o-transform: rotate(90deg);
 /* Webkit */ -webkit-transform: rotate(90deg); 
