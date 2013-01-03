@@ -4,15 +4,16 @@ $(document).ready(function () {
 							
 	
 	$('#accordion-1').easyAccordion({ 
-			autoStart: true,
+			autoStart: false,
 			slideInterval: 3000,
 			pauseOnHover: true,
-			actOnHover: true,
+			actOnHover: false,
 			continuous: true
 	});
-	
+
 	$('#accordion-2').easyAccordion({ 
-			autoStart: false,
+			autoStart: true,
+			slideInterval: 2000,
 			actOnHover: false
 	});
 	
@@ -28,4 +29,5 @@ $(document).ready(function () {
 			slideInterval: 5000,
 	}); 
 		
+
 });

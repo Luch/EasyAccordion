@@ -1,5 +1,5 @@
 /*
- * 	easyAccordion 0.1.7 - jQuery plugin
+ * 	easyAccordion 0.1.8 - jQuery plugin
  *	written by Andrea Cima Serniotti	
  *	http://www.madeincima.eu
  *
@@ -21,9 +21,9 @@
  *  Added afterClickCallback option
  *  0.1.6 2012-12-10 Luch Klooster
  *  Added support for IE10, keeping support of IE9, IE8, IE7 and IE6
- *  0.1.7 2012-12-15 Luch Klooster
- *  Added loop true slides ones and stop on startSlide (parameter continuous: true|false) (thanks to matt mcinvale)
- *  Added act on hover of spine (parameter actOnHover: true|false)
+ *  0.1.8 2013-01-02 Luch Klooster
+ *  Added element dd-content to be able to provide extra css to slide
+ *  Added code to make accordion adjust size on fluid templates (needs jquery.ba-resize.js and some css changes)
  */
  
 (function(jQuery) {
@@ -56,7 +56,6 @@
 			ddWidth = dlWidth - (dtWidth*slideTotal) - (jQuery(this).find('dd').outerWidth(true)-jQuery(this).find('dd').width());
 			if (jQuery.browser.msie && jQuery.browser.version < 9.0){
 				dtWidth = jQuery(this).find('dt').outerWidth();
-				jQuery('html').addClass('lteIE8'); // Add class lteIE8 to HTML tag for 'conditional' CSS
 			}
 			dtHeight = dlHeight - (jQuery(this).find('dt').outerWidth()-jQuery(this).find('dt').width());
 			ddHeight = dlHeight - (jQuery(this).find('dd').outerHeight(true)-jQuery(this).find('dd').height());
@@ -70,6 +69,9 @@
 			var dtTop = 0;
 			var dtOffset = 0;
 		}
+		if (jQuery.browser.msie && jQuery.browser.version < 9.0){
+			jQuery('html').addClass('lteIE8'); // Add class lteIE8 to HTML tag for 'conditional' CSS
+		}
 		
 		// -------- Getting things ready ------------------------------------------------------------------------------
 		
@@ -81,6 +83,11 @@
 			// Restore the contents of the text field
 			startSlide = sessionStorage.getItem(accordionID);
 		}
+		// add element dd-content to be able to provide extra css to slide
+		jQuery(this).find('dd').each(function(){
+			jQuery(this).replaceWith("<dd><dd-content>" + jQuery(this).html() + "</dd-content></dd>" );
+		});
+
 		jQuery(this).find('dt').each(function(){
 			jQuery(this).css({'width':dtHeight,'top':dtTop,'margin-left':dtOffset});	
 			// add unique id to each tab
@@ -116,15 +123,14 @@
 			}
 			f = f + 1;
 		});
+		
 		if (jQuery(this).find('.active').size()) { 
-			jQuery(this).find('.active').next('dd').addClass('active');
+			jQuery(this).find('.active').next('dd').addClass('active').next('dt').addClass('next');
 		} else {
-			jQuery(this).find('dt:first').addClass('active').next('dd').addClass('active');
+			jQuery(this).find('dt:first').addClass('active').next('dd').addClass('active').next('dt').addClass('next');
 		}
 		
 		jQuery(this).find('dt:first').css({'left':'0'}).next().css({'left':dtWidth2});
-		jQuery(this).find('dd').css({'width':ddWidth,'height':ddHeight});	
-
 		
 		// -------- Functions ------------------------------------------------------------------------------
 
@@ -148,17 +154,17 @@
 				var activeDtPos = dtWidth*activeID;
 				if (u <= activeID){
 					var leftDtPos = dtWidth*(u-1);
-					jQuery(this).animate({'left': leftDtPos});
+					jQuery(this).stop().animate({'left': leftDtPos});
 					if (u < activeID){ // If the item sits to the left of the active element
 						jQuery(this).next().css({'left':leftDtPos+dtWidth});	
 					} else { // If the item is the active one
-						jQuery(this).next().animate({'left':activeDtPos});
+						jQuery(this).next().stop().animate({'left':activeDtPos});
 					}
 				} else {
 					var rightDtPos = dlWidth-(dtWidth*(slideTotal-u+1));
-					jQuery(this).animate({'left': rightDtPos});
+					jQuery(this).stop().animate({'left': rightDtPos});
 					var rightDdPos = rightDtPos+dtWidth;
-					jQuery(this).next().animate({'left':rightDdPos});	
+					jQuery(this).next().stop().animate({'left':rightDdPos});	
 				}
 				u = u+ 1;
 			});
@@ -172,11 +178,12 @@
 	
 		jQuery.fn.activateSlide = function() {
 			this.parent('dl').setVariables();	
-			this.parent('dl').find('dd').css({'display':'block'});
+			this.parent('dl').find('dd').css({'display':'block','width':ddWidth,'height':ddHeight});
 			this.parent('dl').find('dd.plus').removeClass('plus');
+			this.parent('dl').find('.next').removeClass('next');
 			this.parent('dl').find('.no-more-active').removeClass('no-more-active');
 			this.parent('dl').find('.active').removeClass('active').addClass('no-more-active');
-			this.addClass('active').next().addClass('active');	
+			this.addClass('active').next().addClass('active').next('dt').addClass('next');	
 			this.parent('dl').findActiveSlide();
 			if (activeID < noMoreActiveID){
 				this.parent('dl').find('dd.no-more-active').addClass('plus');
@@ -257,6 +264,11 @@
 				timerInstance.paused = false;
 			});
 		}
+
+		jQuery(this).resize(function(){
+			jQuery(this).find('dt.active').activateSlide();
+		});
+		jQuery(this).resize();
 	});
-	};
+};
 })(jQuery);

@@ -1,6 +1,7 @@
 /*
 Skin Name: EasyAccordion Stitch
 Description: The skin used at slidedeck.com
+Author: Orman Clark
 Version: 1.0
 Tags: flexible, white, black, multi-color
 */
@@ -10,7 +11,7 @@ Tags: flexible, white, black, multi-color
 dd p{line-height:120%}
 		
 #accordion-1 {
-    width: 900px;
+    width: auto;
 	height: 392px;
 	padding: 10px;
     background: #393d40;
@@ -48,6 +49,7 @@ dd p{line-height:120%}
 #accordion-1 dt.hover{color:#68889b;}
 #accordion-1 dt.active.hover{color:#fff}
 #accordion-1 dd {
+	overflow: auto;
     padding: 10px 30px;
     background: url('images/slide.png') top right no-repeat #fff; 
 }
